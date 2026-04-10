@@ -10,10 +10,10 @@
  * To bypass for trusted packages, add them to .github/package-cooldown-allowlist.json
  */
 
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
 
 const COOLDOWN_DAYS = parseInt(process.env.COOLDOWN_DAYS || '7', 10);
 const LOCKFILE_PATHS = (
