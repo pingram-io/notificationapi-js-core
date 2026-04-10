@@ -11,6 +11,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -33,6 +38,13 @@ jobs:
 
       - name: Check Prettier
         run: npm run prettier-check
+
+      - name: Package Cooldown Check
+        run: node .github/scripts/check-package-cooldown.js
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+          COOLDOWN_DAYS: '7'
+          LOCKFILE_PATHS: 'package-lock.json'
 
       - name: Run Tests
         run: npm test
