@@ -43,8 +43,8 @@ jobs:
         run: node .github/scripts/check-package-cooldown.js
         env:
           GITHUB_BASE_REF: ${{ github.base_ref }}
-          COOLDOWN_DAYS: '7'
-          LOCKFILE_PATHS: 'package-lock.json'
+          COOLDOWN_DAYS: "6"
+          LOCKFILE_PATHS: "package-lock.json"
 
       - name: Run Tests
         run: npm test
