@@ -38,7 +38,7 @@ describe('NotificationAPIClientSDK', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        'notifications/INAPP_WEB?count=100&before=2023-01-01T00:00:00Z'
+        '/user/inapp?count=100&before=2023-01-01T00%3A00%3A00Z'
       ),
       expect.any(Object)
     );
@@ -83,7 +83,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/testClient/users/testUser/notifications/INAPP_WEB',
+      'https://api.notificationapi.com/user/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -113,7 +113,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/testClient/users/testUser/notifications/INAPP_WEB',
+      'https://api.notificationapi.com/user/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -143,7 +143,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/testClient/users/testUser/notifications/INAPP_WEB',
+      'https://api.notificationapi.com/user/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: expect.stringContaining('"opened":"'),
@@ -170,7 +170,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/testClient/users/testUser/notifications/INAPP_WEB',
+      'https://api.notificationapi.com/user/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -203,7 +203,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/testClient/users/testUser/notifications/INAPP_WEB',
+      'https://api.notificationapi.com/user/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -234,7 +234,7 @@ describe('NotificationAPIClientSDK', () => {
     await sdk.getPreferences();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('preferences'),
+      expect.stringContaining('/users/testUser/preferences'),
       expect.objectContaining({
         method: 'GET'
       })
@@ -259,7 +259,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('preferences'),
+      expect.stringContaining('/users/testUser/preferences'),
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify([
@@ -273,7 +273,7 @@ describe('NotificationAPIClientSDK', () => {
     );
   });
 
-  test('updateDeliveryOption should support SLACK channel', async () => {
+  test('updateDeliveryOption should support PUSH channel', async () => {
     const mockResponse = {
       json: jest.fn().mockResolvedValue({})
     };
@@ -285,19 +285,19 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     await sdk.updateDeliveryOption({
-      notificationId: 'testSlackNotification',
-      channel: 'SLACK',
+      notificationId: 'testPushNotification',
+      channel: 'PUSH',
       delivery: 'hourly'
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('preferences'),
+      expect.stringContaining('/users/testUser/preferences'),
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify([
           {
-            notificationId: 'testSlackNotification',
-            channel: 'SLACK',
+            notificationId: 'testPushNotification',
+            channel: 'PUSH',
             delivery: 'hourly'
           }
         ])
@@ -322,9 +322,7 @@ describe('NotificationAPIClientSDK', () => {
     await sdk.identify(params);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'https://api.notificationapi.com/testClient/users/testUser/'
-      ),
+      expect.stringContaining('https://api.notificationapi.com/users/testUser'),
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify(params)
@@ -363,34 +361,12 @@ describe('NotificationAPIClientSDK', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        'https://api.notificationapi.com/testClient/users/testUser/account_metadata'
+        'https://api.notificationapi.com/users/account-metadata'
       ),
       expect.objectContaining({
         method: 'GET'
       })
     );
-  });
-  test('slack.getChannels should return hasMoreChannels and hasMoreUsers from API', async () => {
-    const mockResponse = {
-      json: jest.fn().mockResolvedValue({
-        channels: [{ id: 'C123', name: 'general' }],
-        users: [{ id: 'U123', name: 'alice' }],
-        me: { id: 'U123', name: 'alice' },
-        hasMoreChannels: true,
-        hasMoreUsers: false
-      })
-    };
-    (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
-
-    const sdk = NotificationAPIClientSDK.init({
-      userId: 'testUser',
-      clientId: 'testClient'
-    });
-
-    const result = await sdk.slack.getChannels();
-
-    expect(result.hasMoreChannels).toBe(true);
-    expect(result.hasMoreUsers).toBe(false);
   });
 });
 
@@ -404,14 +380,14 @@ describe('api function', () => {
     const result = await api(
       'GET',
       'api.notificationapi.com',
-      'testResource',
+      '/testResource',
       'testClient',
       'testUser',
       'hashedTestUser'
     );
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/testClient/users/testUser/testResource',
+      'https://api.notificationapi.com/testResource',
       expect.objectContaining({
         method: 'GET',
         headers: {
@@ -430,7 +406,7 @@ describe('api function', () => {
       await api(
         'GET',
         'api.notificationapi.com',
-        'testResource',
+        '/testResource',
         'testClient',
         'testUser'
       );
@@ -449,7 +425,7 @@ describe('api function', () => {
     const result = await api(
       'GET',
       'api.notificationapi.com',
-      'testResource',
+      '/testResource',
       'testClient',
       'testUser'
     );
