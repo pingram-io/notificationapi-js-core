@@ -75,9 +75,9 @@ export const generateBasicTokenForUser = (
   userId: string,
   hashedUserId?: string
 ) => {
-  const token = hashedUserId
-    ? btoa(clientId + ':' + userId + ':' + hashedUserId)
-    : btoa(clientId + ':' + userId);
-
-  return token;
+  // Always send the 3-part widget token (clientId:userId:hashedUserId). The
+  // hash slot stays empty when secureMode is off. The trailing colon is what
+  // lets the backend distinguish a widget token from a server
+  // clientId:clientSecret token.
+  return btoa(clientId + ':' + userId + ':' + (hashedUserId ?? ''));
 };
