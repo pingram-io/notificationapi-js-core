@@ -322,7 +322,9 @@ describe('NotificationAPIClientSDK', () => {
     await sdk.identify(params);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('https://api.notificationapi.com/users/testUser'),
+      expect.stringContaining(
+        'https://api.notificationapi.com/endUsers/testUser'
+      ),
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify(params)
@@ -361,7 +363,7 @@ describe('NotificationAPIClientSDK', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        'https://api.notificationapi.com/users/account-metadata'
+        'https://api.notificationapi.com/endUsers/account-metadata'
       ),
       expect.objectContaining({
         method: 'GET'

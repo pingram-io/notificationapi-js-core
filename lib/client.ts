@@ -200,14 +200,14 @@ export const NotificationAPIClientSDK: NotificationAPIClientSDK = {
     postUser: function (params: PostUserRequest) {
       return NotificationAPIClientSDK.rest.generic(
         'POST',
-        userResourcePath(),
+        endUserResourcePath(),
         params
       );
     },
     getUserAccountMetadata: function () {
       return NotificationAPIClientSDK.rest.generic(
         'GET',
-        '/users/account-metadata'
+        '/endUsers/account-metadata'
       );
     }
   },
