@@ -7,8 +7,6 @@ import {
   DeliveryOptionsForEmail,
   DeliveryOptionsForInappWeb,
   PostUserRequest,
-  SlackChannel,
-  SlackUser,
   User,
   UserAccountMetadata,
   WS_REGION
@@ -36,9 +34,6 @@ type NotificationAPIClientSDKConfig = {
 
   // Debug mode:
   debug: boolean;
-
-  // SDK Dev Mode:
-  sdkDevMode: boolean;
 };
 
 const defaultConfig: NotificationAPIClientSDKConfig = {
@@ -53,9 +48,14 @@ const defaultConfig: NotificationAPIClientSDKConfig = {
   ).toISOString(),
   onNewInAppNotifications: undefined,
   keepWebSocketAliveForSeconds: 24 * 60 * 60, // 24 hours
-  debug: false,
-  sdkDevMode: false
+  debug: false
 };
+
+const userResourcePath = () =>
+  `/users/${encodeURIComponent(NotificationAPIClientSDK.config.userId)}`;
+
+const endUserResourcePath = () =>
+  `/endUsers/${encodeURIComponent(NotificationAPIClientSDK.config.userId)}`;
 
 type NotificationAPIClientSDK = {
   config: NotificationAPIClientSDKConfig;
@@ -129,17 +129,6 @@ type NotificationAPIClientSDK = {
   user: {
     get: () => Promise<User>;
   };
-  slack: {
-    getOAuthUrl: (props?: { destinationUrl?: string }) => string;
-    getChannels: () => Promise<{
-      channels: SlackChannel[];
-      users: SlackUser[];
-      me: SlackUser;
-      hasMoreChannels?: boolean;
-      hasMoreUsers?: boolean;
-    }>;
-    setChannel: (channelId: string) => Promise<void>;
-  };
 };
 
 export const NotificationAPIClientSDK: NotificationAPIClientSDK = {
@@ -185,31 +174,41 @@ export const NotificationAPIClientSDK: NotificationAPIClientSDK = {
     getNotifications: function (before, count) {
       return NotificationAPIClientSDK.rest.generic(
         'GET',
-        `notifications/INAPP_WEB?count=${count}&before=${before}`
+        `${endUserResourcePath()}/inapp?count=${count}&before=${encodeURIComponent(before)}`
       );
     },
     patchNotifications: function (params) {
       return NotificationAPIClientSDK.rest.generic(
         'PATCH',
-        'notifications/INAPP_WEB',
+        `${endUserResourcePath()}/inapp`,
         params
       );
     },
     getPreferences: function () {
-      return NotificationAPIClientSDK.rest.generic('GET', 'preferences');
+      return NotificationAPIClientSDK.rest.generic(
+        'GET',
+        `${endUserResourcePath()}/preferences`
+      );
     },
     postPreferences: function (params) {
       return NotificationAPIClientSDK.rest.generic(
         'POST',
-        'preferences',
+        `${endUserResourcePath()}/preferences`,
         params
       );
     },
     postUser: function (params: PostUserRequest) {
-      return NotificationAPIClientSDK.rest.generic('POST', '', params);
+      return NotificationAPIClientSDK.rest.generic(
+        'POST',
+        endUserResourcePath(),
+        params
+      );
     },
     getUserAccountMetadata: function () {
-      return NotificationAPIClientSDK.rest.generic('GET', 'account_metadata');
+      return NotificationAPIClientSDK.rest.generic(
+        'GET',
+        '/endUsers/account-metadata'
+      );
     }
   },
   websocket: {
@@ -420,47 +419,10 @@ export const NotificationAPIClientSDK: NotificationAPIClientSDK = {
 
   user: {
     get: async () => {
-      return NotificationAPIClientSDK.rest.generic('GET', '') as Promise<User>;
-    }
-  },
-
-  slack: {
-    getOAuthUrl: (props?: { destinationUrl?: string }) => {
-      const sdkDevMode = NotificationAPIClientSDK.config.sdkDevMode;
-      const domain = sdkDevMode
-        ? 'localhost:3001'
-        : NotificationAPIClientSDK.config.host.replace('api.', 'app.');
-      // if no redirectUri is provided, use the current page's URL
-      const destination = props?.destinationUrl || window.location.href;
-
-      const state = encodeURIComponent(
-        JSON.stringify({
-          destination,
-          userId: NotificationAPIClientSDK.config.userId,
-          clientId: NotificationAPIClientSDK.config.clientId,
-          hashedUserId: NotificationAPIClientSDK.config.hashedUserId
-        })
-      );
-
-      const url =
-        'https://slack.com/oauth/v2/authorize?' +
-        'client_id=1146598856352.8825220259395' +
-        '&scope=chat:write,channels:read,channels:join,chat:write.customize,chat:write.public,groups:read,im:read,users:read' +
-        `&redirect_uri=https://${domain}/slack/oauth/callback` +
-        `&state=${state}`;
-      return url;
-    },
-    getChannels: async () => {
-      const response = await NotificationAPIClientSDK.rest.generic(
+      return NotificationAPIClientSDK.rest.generic(
         'GET',
-        'slack/channels'
-      );
-      return response;
-    },
-    setChannel: async (channelId: string) => {
-      return NotificationAPIClientSDK.identify({
-        slackChannel: channelId
-      });
+        userResourcePath()
+      ) as Promise<User>;
     }
   }
 };
