@@ -54,6 +54,9 @@ const defaultConfig: NotificationAPIClientSDKConfig = {
 const userResourcePath = () =>
   `/users/${encodeURIComponent(NotificationAPIClientSDK.config.userId)}`;
 
+const endUserResourcePath = () =>
+  `/endUsers/${encodeURIComponent(NotificationAPIClientSDK.config.userId)}`;
+
 type NotificationAPIClientSDK = {
   config: NotificationAPIClientSDKConfig;
   logger: Logger;
@@ -171,26 +174,26 @@ export const NotificationAPIClientSDK: NotificationAPIClientSDK = {
     getNotifications: function (before, count) {
       return NotificationAPIClientSDK.rest.generic(
         'GET',
-        `/user/inapp?count=${count}&before=${encodeURIComponent(before)}`
+        `${endUserResourcePath()}/inapp?count=${count}&before=${encodeURIComponent(before)}`
       );
     },
     patchNotifications: function (params) {
       return NotificationAPIClientSDK.rest.generic(
         'PATCH',
-        '/user/inapp',
+        `${endUserResourcePath()}/inapp`,
         params
       );
     },
     getPreferences: function () {
       return NotificationAPIClientSDK.rest.generic(
         'GET',
-        `${userResourcePath()}/preferences`
+        `${endUserResourcePath()}/preferences`
       );
     },
     postPreferences: function (params) {
       return NotificationAPIClientSDK.rest.generic(
         'POST',
-        `${userResourcePath()}/preferences`,
+        `${endUserResourcePath()}/preferences`,
         params
       );
     },
