@@ -55,7 +55,7 @@ const userResourcePath = () =>
   `/users/${encodeURIComponent(NotificationAPIClientSDK.config.userId)}`;
 
 const endUserResourcePath = () =>
-  `/endUsers/${encodeURIComponent(NotificationAPIClientSDK.config.userId)}`;
+  `/enduser/${encodeURIComponent(NotificationAPIClientSDK.config.userId)}`;
 
 type NotificationAPIClientSDK = {
   config: NotificationAPIClientSDKConfig;
@@ -174,26 +174,26 @@ export const NotificationAPIClientSDK: NotificationAPIClientSDK = {
     getNotifications: function (before, count) {
       return NotificationAPIClientSDK.rest.generic(
         'GET',
-        `${endUserResourcePath()}/inapp?count=${count}&before=${encodeURIComponent(before)}`
+        `/enduser/inapp?count=${count}&before=${encodeURIComponent(before)}`
       );
     },
     patchNotifications: function (params) {
       return NotificationAPIClientSDK.rest.generic(
         'PATCH',
-        `${endUserResourcePath()}/inapp`,
+        '/enduser/inapp',
         params
       );
     },
     getPreferences: function () {
       return NotificationAPIClientSDK.rest.generic(
         'GET',
-        `${endUserResourcePath()}/preferences`
+        '/enduser/preferences'
       );
     },
     postPreferences: function (params) {
       return NotificationAPIClientSDK.rest.generic(
         'POST',
-        `${endUserResourcePath()}/preferences`,
+        '/enduser/preferences',
         params
       );
     },
@@ -207,7 +207,7 @@ export const NotificationAPIClientSDK: NotificationAPIClientSDK = {
     getUserAccountMetadata: function () {
       return NotificationAPIClientSDK.rest.generic(
         'GET',
-        '/endUsers/account-metadata'
+        '/enduser/account-metadata'
       );
     }
   },

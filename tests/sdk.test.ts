@@ -38,7 +38,7 @@ describe('NotificationAPIClientSDK', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        '/endUsers/testUser/inapp?count=100&before=2023-01-01T00%3A00%3A00Z'
+        '/enduser/inapp?count=100&before=2023-01-01T00%3A00%3A00Z'
       ),
       expect.any(Object)
     );
@@ -83,7 +83,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/endUsers/testUser/inapp',
+      'https://api.notificationapi.com/enduser/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -113,7 +113,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/endUsers/testUser/inapp',
+      'https://api.notificationapi.com/enduser/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -143,7 +143,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/endUsers/testUser/inapp',
+      'https://api.notificationapi.com/enduser/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: expect.stringContaining('"opened":"'),
@@ -170,7 +170,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/endUsers/testUser/inapp',
+      'https://api.notificationapi.com/enduser/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -203,7 +203,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.notificationapi.com/endUsers/testUser/inapp',
+      'https://api.notificationapi.com/enduser/inapp',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -234,7 +234,7 @@ describe('NotificationAPIClientSDK', () => {
     await sdk.getPreferences();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/endUsers/testUser/preferences'),
+      expect.stringContaining('/enduser/preferences'),
       expect.objectContaining({
         method: 'GET'
       })
@@ -259,7 +259,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/endUsers/testUser/preferences'),
+      expect.stringContaining('/enduser/preferences'),
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify([
@@ -291,7 +291,7 @@ describe('NotificationAPIClientSDK', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/endUsers/testUser/preferences'),
+      expect.stringContaining('/enduser/preferences'),
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify([
@@ -323,7 +323,7 @@ describe('NotificationAPIClientSDK', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        'https://api.notificationapi.com/endUsers/testUser'
+        'https://api.notificationapi.com/enduser/testUser'
       ),
       expect.objectContaining({
         method: 'POST',
@@ -363,7 +363,7 @@ describe('NotificationAPIClientSDK', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        'https://api.notificationapi.com/endUsers/account-metadata'
+        'https://api.notificationapi.com/enduser/account-metadata'
       ),
       expect.objectContaining({
         method: 'GET'
