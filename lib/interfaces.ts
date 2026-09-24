@@ -174,67 +174,10 @@ export interface User {
   email?: string;
   number?: string;
   pushTokens?: PushToken[];
-  webPushTokens?: WebPushToken[];
   lastSeenTime?: string;
   createdAt?: string;
   updatedAt?: string;
-  slackChannel?: string;
-  slackToken?: OauthV2AccessResponse;
 }
-
-interface WebAPICallResult {
-  ok: boolean;
-  error?: string;
-  response_metadata?: {
-    warnings?: string[];
-    next_cursor?: string;
-    scopes?: string[];
-    acceptedScopes?: string[];
-    retryAfter?: number;
-    messages?: string[];
-  };
-}
-
-interface AuthedUser {
-  access_token?: string;
-  expires_in?: number;
-  id?: string;
-  refresh_token?: string;
-  scope?: string;
-  token_type?: string;
-}
-
-interface Enterprise {
-  id?: string;
-  name?: string;
-}
-
-export interface IncomingWebhook {
-  channel?: string;
-  channel_id?: string;
-  configuration_url?: string;
-  url?: string;
-}
-
-type OauthV2AccessResponse = WebAPICallResult & {
-  access_token?: string;
-  app_id?: string;
-  authed_user?: AuthedUser;
-  bot_user_id?: string;
-  enterprise?: Enterprise;
-  error?: string;
-  expires_in?: number;
-  incoming_webhook?: IncomingWebhook;
-  is_enterprise_install?: boolean;
-  needed?: string;
-  ok?: boolean;
-  provided?: string;
-  refresh_token?: string;
-  scope?: string;
-  team?: Enterprise;
-  token_type?: string;
-  warning?: string;
-};
 
 export type PostUserRequest = Omit<
   Partial<User>,
@@ -261,90 +204,6 @@ export interface Device {
   model?: string;
 }
 
-export interface PushSubscription {
-  endpoint: string;
-  keys: {
-    p256dh: string;
-    auth: string;
-  };
-}
-
-export interface WebPushToken {
-  sub: PushSubscription;
-}
 export interface UserAccountMetadata {
   logo: string;
-  environmentVapidPublicKey: string;
-  hasWebPushEnabled: boolean;
-}
-
-/* Slack Types Start */
-export interface SlackChannel {
-  context_team_id?: string;
-  conversation_host_id?: string;
-  created?: number;
-  creator?: string;
-  id?: string;
-  internal_team_ids?: string[];
-  is_archived?: boolean;
-  is_channel?: boolean;
-  is_ext_shared?: boolean;
-  is_general?: boolean;
-  is_global_shared?: boolean;
-  is_group?: boolean;
-  is_im?: boolean;
-  is_member?: boolean;
-  is_moved?: number;
-  is_mpim?: boolean;
-  is_org_default?: boolean;
-  is_org_mandatory?: boolean;
-  is_org_shared?: boolean;
-  is_pending_ext_shared?: boolean;
-  is_private?: boolean;
-  is_shared?: boolean;
-  is_user_deleted?: boolean;
-  name?: string;
-  name_normalized?: string;
-  num_members?: number;
-  pending_connected_team_ids?: string[];
-  pending_shared?: string[];
-  previous_names?: string[];
-  priority?: number;
-  properties?: unknown;
-  purpose?: unknown;
-  shared_team_ids?: string[];
-  topic?: unknown;
-  unlinked?: number;
-  updated?: number;
-  user?: string;
-}
-
-export interface SlackUser {
-  color?: string;
-  deleted?: boolean;
-  enterprise_user?: unknown;
-  has_2fa?: boolean;
-  id?: string;
-  is_admin?: boolean;
-  is_app_user?: boolean;
-  is_bot?: boolean;
-  is_connector_bot?: boolean;
-  is_email_confirmed?: boolean;
-  is_invited_user?: boolean;
-  is_owner?: boolean;
-  is_primary_owner?: boolean;
-  is_restricted?: boolean;
-  is_ultra_restricted?: boolean;
-  is_workflow_bot?: boolean;
-  locale?: string;
-  name?: string;
-  profile?: unknown;
-  real_name?: string;
-  team_id?: string;
-  two_factor_type?: string;
-  tz?: string;
-  tz_label?: string;
-  tz_offset?: number;
-  updated?: number;
-  who_can_share_contact_card?: string;
 }

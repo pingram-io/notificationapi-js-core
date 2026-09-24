@@ -4,7 +4,7 @@ import { Logger } from './logger';
 export const api = async (
   method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
   host: string | API_REGION,
-  resource: string,
+  path: string,
   clientId: string,
   userId: string,
   hashedUserId?: string,
@@ -12,9 +12,7 @@ export const api = async (
   logger?: Logger
 ): Promise<any> => {
   const token = generateBasicTokenForUser(clientId, userId, hashedUserId);
-  const url = `https://${host}/${clientId}/users/${encodeURIComponent(
-    userId
-  )}/${resource}`;
+  const url = `https://${host}${path.startsWith('/') ? path : `/${path}`}`;
 
   const headers = {
     Authorization: `Basic ${token}`
@@ -34,7 +32,7 @@ export const api = async (
   try {
     const res = await fetch(url, {
       method,
-      body: JSON.stringify(data),
+      ...(data !== undefined ? { body: JSON.stringify(data) } : {}),
       headers
     });
 
@@ -77,9 +75,9 @@ export const generateBasicTokenForUser = (
   userId: string,
   hashedUserId?: string
 ) => {
-  const token = hashedUserId
-    ? btoa(clientId + ':' + userId + ':' + hashedUserId)
-    : btoa(clientId + ':' + userId);
-
-  return token;
+  // Always send the 3-part widget token (clientId:userId:hashedUserId). The
+  // hash slot stays empty when secureMode is off. The trailing colon is what
+  // lets the backend distinguish a widget token from a server
+  // clientId:clientSecret token.
+  return btoa(clientId + ':' + userId + ':' + (hashedUserId ?? ''));
 };
